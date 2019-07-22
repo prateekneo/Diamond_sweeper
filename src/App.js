@@ -92,18 +92,17 @@ class App extends React.Component {
                 pos = index;
             }
         });
-        obj.array.map((x, i) => {
-            x.map((y, j) => {
-                if(y === 2 || y===3 || y===4 || y===5){
-                    //obj.color[i][j] = 'black';
-                    obj.array[i][j] = 
+        obj.array.map((x, a) => {
+            x.map((y, b) => {
+                if(obj.color[a][b] === 'white' && obj.array[a][b] !== -1 && obj.array[a][b] !== 1){
+                    obj.array[a][b] = -1;
                 }
             })
         })
-        if(obj.array[i][j] === 1){
+        if(obj.array[i][j] === 1 && obj.color[i][j] === 'black'){
             
             obj.count_diamond = obj.count_diamond + 1;
-            obj.total_count = obj.total_count + 1;
+            //obj.total_count = obj.total_count + 1;
             if(obj.count_diamond !== 8 ){
                 
                 //obj.array[i][j] = 6;
@@ -112,6 +111,13 @@ class App extends React.Component {
                 console.log(obj.diamond);
                 obj.color[i][j] = "white";
                 this.handleCalc(obj.array, obj.diamond);
+                obj.array.map((x, a) => {
+                    x.map((y, b) => {
+                        if(obj.color[a][b] === 'white' && obj.array[a][b] !== -1 && obj.array[a][b] !== 1){
+                            obj.array[a][b] = -1;
+                        }
+                    })
+                })
                 localStorage.setItem("obj", JSON.stringify(obj))
 
                 this.setState({
@@ -124,6 +130,13 @@ class App extends React.Component {
                 obj.show_score = 1;
                 obj.display = "block";  
                 obj.target = 1;
+                obj.array.map((x, a) => {
+                    x.map((y, b) => {
+                        if(obj.color[a][b] === 'black' && obj.array[a][b] !== -1 && obj.array[a][b] !== 1){
+                            obj.total_count = obj.total_count + 1;
+                        }
+                    })
+                })
                 localStorage.setItem("obj", JSON.stringify(obj))
                 this.setState({
                     target : 1,
@@ -134,14 +147,16 @@ class App extends React.Component {
             }
         } else {
             //alert("prateek");
-            obj.total_count = obj.total_count + 1;
-            obj.color[i][j] = "white";
-            localStorage.setItem("obj", JSON.stringify(obj))
-            this.setState({
-                name : '',
-                change : 1,
-                color : "black"
-            })
+            //obj.total_count = obj.total_count + 1;
+            if(obj.show_score === 0){
+                obj.color[i][j] = "white";
+                localStorage.setItem("obj", JSON.stringify(obj))
+                this.setState({
+                    name : '',
+                    change : 1,
+                    color : "black"
+                })
+            }
         }
 
     }
@@ -215,25 +230,45 @@ class App extends React.Component {
     saveScore = () => {
         let high_score = JSON.parse(localStorage.getItem('high_score'));
         //alert('prateek');
-        let score = {
+        let obj = JSON.parse(localStorage.getItem("obj"));
+        alert(obj.total_count);
+        let score_save = {
             name : this.state.name,
             score : obj.total_count
         }
+        if(high_score == null){
+            high_score =[];
+            high_score.push(score_save);
+            high_score.sort((a, b) => {
 
-        high_score.push(score);
-        high_score.sort((a, b) => {
+                if(parseInt(a.score) < parseInt(b.score)){
+                    return 1;
+                } else{
+                    return -1;
+                }
+            })
+            localStorage.setItem("high_score", JSON.stringify(high_score))
 
-            if(parseInt(a.score) < parseInt(b.score)){
-                return 1;
-            } else{
-                return -1;
-            }
-        })
-        localStorage.setItem("high_score", JSON.stringify(high_score))
+            this.setState({
+                name: ''
+            })
+        }
+        else {
+            high_score.push(score_save);
+            high_score.sort((a, b) => {
 
-        this.setState({
-            name: ''
-        })
+                if(parseInt(a.score) < parseInt(b.score)){
+                    return 1;
+                } else{
+                    return -1;
+                }
+            })
+            localStorage.setItem("high_score", JSON.stringify(high_score))
+
+            this.setState({
+                name: ''
+            })
+        }
         
     }
 
@@ -246,7 +281,7 @@ class App extends React.Component {
     render(){
         
         let obj = JSON.parse(localStorage.getItem("obj"));
-        //console.log(obj);
+        console.log(obj);
         //console.log(JSON.parse(obj));
         let leaderBoard = JSON.parse(localStorage.getItem("high_score"));
 
@@ -256,10 +291,10 @@ class App extends React.Component {
                     {(obj !== null)?((obj.show_score === 1)?<span><h2>Game Over</h2></span>:null):null}
                 </div>
                 <button type="button" onClick={this.startGame}>Start Game</button>
-                <button type="button" data-target={(this.state.target === 1)?"#myModal":"#myModal1"} data-toggle="modal">Save Score</button>
+                {((obj !== null)?((obj.show_score === 1)?<button type="button" data-target={(obj.target === 1)?"#myModal":"#myModal1"} data-toggle="modal">Save Score</button>:null):0)}
                 <button type="button" data-target="#myModal2" data-toggle="modal">Leaderboard</button>
                 <div>
-                    Your Score : {(obj !== null)?obj.total_count:0}
+                    {((obj !== null)?((obj.show_score === 1)?<span>Your Score : {obj.total_count}</span>:null):0)}
                 </div>
                 <div>
                     <table>
