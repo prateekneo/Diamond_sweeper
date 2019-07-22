@@ -1,0 +1,36 @@
+.box{
+    margin : 5px 5px 5px 5px;
+    border : 1px solid black;
+    max-width: 70px;
+}
+
+.app{
+    margin-top: 20px;
+    text-align: center;
+}
+
+table{
+    margin-left : 320px;
+}
+
+table, tr, td {
+    border : 1px solid white;
+    padding : 20px 20px 20px 20px;
+    color : black;
+}
+
+#input_name {
+    max-width: 180px;
+}
+
+.input{
+    margin-left : 90px;
+}
+
+#input_span{
+    margin-left : 20px;
+}
+
+#score_span{
+    margin-left : 23px;
+}
