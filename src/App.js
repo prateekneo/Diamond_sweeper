@@ -313,10 +313,10 @@ class App extends React.Component {
                     <center>{(obj !== null)?((obj.show_score === 1)?<span><h2>Game Over</h2></span>:null):null}</center>
                 </div>
                 <span><button type="button" className="btn btn-secondary" onClick={this.startGame}>Start Game</button></span>
-                {((obj !== null)?((obj.show_score === 1)?<span><button type="button" className="btn btn-secondary" data-target={(obj.target === 1)?"#myModal":"#myModal1"} data-toggle="modal">Save Score</button></span>:null):0)}
+                {((obj !== null)?((obj.show_score === 1)?<span><button type="button" className="btn btn-secondary" data-target={(obj.target === 1)?"#myModal":"#myModal1"} data-toggle="modal">Save Score</button></span>:null):null)}
                 <span><button type="button" className="btn btn-secondary" data-target="#myModal2" data-toggle="modal">Leaderboard</button></span>
                 <div>
-                    {((obj !== null)?((obj.show_score === 1)?<span>Your Score : {obj.total_count}</span>:null):0)}
+                    {((obj !== null)?((obj.show_score === 1)?<span>Your Score : {obj.total_count}</span>:null):null)}
                 </div>
                 <br />
                 <div>
