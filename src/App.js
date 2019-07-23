@@ -231,7 +231,7 @@ class App extends React.Component {
         let high_score = JSON.parse(localStorage.getItem('high_score'));
         //alert('prateek');
         let obj = JSON.parse(localStorage.getItem("obj"));
-        alert(obj.total_count);
+        //alert(obj.total_count);
         let score_save = {
             name : this.state.name,
             score : obj.total_count
@@ -253,7 +253,7 @@ class App extends React.Component {
                 name: ''
             })
         }
-        else {
+        else if(high_score.length < 10){
             high_score.push(score_save);
             high_score.sort((a, b) => {
 
@@ -263,6 +263,27 @@ class App extends React.Component {
                     return -1;
                 }
             })
+            localStorage.setItem("high_score", JSON.stringify(high_score))
+
+            this.setState({
+                name: ''
+            })
+        } else {
+            alert('prateek');
+            let len = high_score.length;
+            if(high_score[len-1] < obj.total_count){
+                high_score.splice(len-1, 1);
+                high_score.push(score_save);
+                high_score.sort((a, b) => {
+                    if (parseInt(a.score) < parseInt(b.score)){
+                        return 1;
+                    }
+                    else {
+                        return -1;
+                    }
+                })
+            }
+           
             localStorage.setItem("high_score", JSON.stringify(high_score))
 
             this.setState({
@@ -281,22 +302,25 @@ class App extends React.Component {
     render(){
         
         let obj = JSON.parse(localStorage.getItem("obj"));
-        console.log(obj);
+        //console.log(obj);
         //console.log(JSON.parse(obj));
         let leaderBoard = JSON.parse(localStorage.getItem("high_score"));
 
         return (
             <div class="container app">
+                
                 <div>
-                    {(obj !== null)?((obj.show_score === 1)?<span><h2>Game Over</h2></span>:null):null}
+                    <center>{(obj !== null)?((obj.show_score === 1)?<span><h2>Game Over</h2></span>:null):null}</center>
                 </div>
-                <button type="button" onClick={this.startGame}>Start Game</button>
-                {((obj !== null)?((obj.show_score === 1)?<button type="button" data-target={(obj.target === 1)?"#myModal":"#myModal1"} data-toggle="modal">Save Score</button>:null):0)}
-                <button type="button" data-target="#myModal2" data-toggle="modal">Leaderboard</button>
+                <span><button type="button" className="btn btn-secondary" onClick={this.startGame}>Start Game</button></span>
+                {((obj !== null)?((obj.show_score === 1)?<span><button type="button" className="btn btn-secondary" data-target={(obj.target === 1)?"#myModal":"#myModal1"} data-toggle="modal">Save Score</button></span>:null):0)}
+                <span><button type="button" className="btn btn-secondary" data-target="#myModal2" data-toggle="modal">Leaderboard</button></span>
                 <div>
                     {((obj !== null)?((obj.show_score === 1)?<span>Your Score : {obj.total_count}</span>:null):0)}
                 </div>
+                <br />
                 <div>
+                    <center>
                     <table>
                         <tbody>
                             {(obj !== null)?((obj.array.map((x, i) => {
@@ -309,6 +333,7 @@ class App extends React.Component {
                             }
                         </tbody>
                     </table>
+                    </center>
                 </div>
                 
                 {(obj!== null && obj.show_score === 1)?<div class="modal" id="myModal">
